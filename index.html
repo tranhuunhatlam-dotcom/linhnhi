@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bếp Thông Minh - Gợi Ý Món Ăn Theo Ngân Sách & Nguyên Liệu</title>
+  <meta name="description" content="Hệ thống lọc và gợi ý món ăn chuẩn vị Việt Nam theo ngân sách khả dụng và nguyên liệu sẵn có trong tủ lạnh. Tối ưu chi phí, hướng dẫn nấu chi tiết.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Background glow effects -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="container header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="bi bi-fire"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Bếp Thông Minh</h1>
+          <span class="brand-tagline">Tiết kiệm chi phí • Nấu ăn chuẩn vị</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-btn active" id="btn-tab-dishes">
+          <i class="bi bi-egg-fried"></i> Gợi ý món ăn
+        </button>
+        <button class="nav-btn" id="btn-tab-combos">
+          <i class="bi bi-grid-1x2-fill"></i> Mâm cơm gia đình
+        </button>
+        <button class="nav-btn" id="btn-tab-weekly">
+          <i class="bi bi-calendar2-week-fill"></i> Thực đơn 7 ngày
+        </button>
+        <button class="nav-btn" id="btn-tab-stores">
+          <i class="bi bi-basket2"></i> Nơi mua & Mẹo chợ
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="backend-status-pill" id="backend-status-badge" title="Trạng thái kết nối máy chủ">
+          <span class="status-dot online"></span>
+          <span id="backend-status-text">Backend: Online</span>
+        </div>
+        <button class="btn-icon" id="theme-toggle" title="Chuyển chế độ sáng/tối">
+          <i class="bi bi-moon-stars-fill"></i>
+        </button>
+        <button class="btn-primary-sm" id="btn-open-add-dish">
+          <i class="bi bi-plus-lg"></i> Thêm món
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Hero & Search Dashboard -->
+  <main class="main-content">
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-intro text-center">
+          <div class="badge-pill">
+            <span class="pulsing-dot"></span> Trợ lý ẩm thực thông minh 2026
+          </div>
+          <h2 class="hero-title">
+            Hôm nay ăn gì với <span class="highlight-text">tiền & nguyên liệu</span> bạn có?
+          </h2>
+          <p class="hero-subtitle">
+            Nhập ngân sách và đồ có sẵn trong tủ lạnh — Hệ thống tự tính chi phí mua thêm, lọc công thức tối ưu và chỉ điểm nơi mua rẻ nhất.
+          </p>
+        </div>
+
+        <!-- Filter Card / Input Panel -->
+        <div class="filter-card card-glass">
+          <form id="filter-form">
+            <!-- Row 1: Budget and Servings -->
+            <div class="form-grid-top">
+              <!-- Budget input -->
+              <div class="form-group budget-group">
+                <div class="label-row">
+                  <label for="budget-input">
+                    <i class="bi bi-wallet2 text-accent"></i> Ngân sách dự chi:
+                  </label>
+                  <span class="budget-display" id="budget-value-display">50.000 đ</span>
+                </div>
+                
+                <div class="budget-slider-wrapper">
+                  <input type="range" id="budget-range" min="15000" max="300000" step="5000" value="50000">
+                </div>
+
+                <div class="budget-quick-pills">
+                  <button type="button" class="quick-pill" data-amount="30000">30k (Sinh viên)</button>
+                  <button type="button" class="quick-pill active" data-amount="50000">50k (2 người)</button>
+                  <button type="button" class="quick-pill" data-amount="80000">80k (Đủ đầy)</button>
+                  <button type="button" class="quick-pill" data-amount="120000">120k (Gia đình)</button>
+                  <button type="button" class="quick-pill" data-amount="200000">200k (Thịnh soạn)</button>
+                </div>
+              </div>
+
+              <!-- Servings input -->
+              <div class="form-group servings-group">
+                <label>
+                  <i class="bi bi-people text-accent"></i> Khẩu phần ăn:
+                </label>
+                <div class="servings-counter">
+                  <button type="button" class="btn-count" id="btn-servings-dec">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <div class="servings-display">
+                    <span id="servings-number">2</span>
+                    <small>người</small>
+                  </div>
+                  <button type="button" class="btn-count" id="btn-servings-inc">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+                <div class="pantry-spice-check">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" id="check-has-spices" checked>
+                    <span class="checkmark"></span>
+                    <span class="checkbox-text">Đã có sẵn gia vị cơ bản (mắm, muối, dầu ăn)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: In-stock Fridge Ingredients -->
+            <div class="form-group ingredients-group">
+              <div class="label-row">
+                <label>
+                  <i class="bi bi-box2-heart text-accent"></i> Nguyên liệu đang có trong tủ lạnh (gợi ý tận dụng):
+                </label>
+                <button type="button" class="btn-scan-fridge" id="btn-scan-fridge" title="Tải ảnh tủ lạnh để AI tự nhận diện">
+                  <i class="bi bi-camera-fill"></i> <span>AI Quét Tủ Lạnh</span>
+                </button>
+              </div>
+              
+              <!-- Input with Tag badges -->
+              <div class="tag-input-container" id="tag-input-box">
+                <div class="tags-wrapper" id="tags-list">
+                  <!-- Active tags will render here -->
+                </div>
+                <input 
+                  type="text" 
+                  id="ingredient-input" 
+                  placeholder="Nhập tên nguyên liệu (vd: Trứng gà, Cà chua, Thịt băm...) rồi nhấn Enter"
+                  autocomplete="off"
+                >
+              </div>
+
+              <!-- Diet goal pills -->
+              <div class="diet-goals-bar">
+                <span class="diet-label"><i class="bi bi-heart-pulse-fill text-accent"></i> Mục tiêu ăn uống:</span>
+                <button type="button" class="goal-pill active" data-goal="all">Tất cả</button>
+                <button type="button" class="goal-pill" data-goal="saving">💰 Tiết kiệm sinh viên</button>
+                <button type="button" class="goal-pill" data-goal="gym">🏋️ Tăng cơ / Giàu Đạm</button>
+                <button type="button" class="goal-pill" data-goal="clean">🥗 Eat Clean / Ít Calo</button>
+              </div>
+
+              <!-- Quick pick suggestions -->
+              <div class="quick-ingredients-section">
+                <span class="quick-label"><i class="bi bi-lightning-charge"></i> Chọn nhanh đồ có sẵn:</span>
+                <div class="quick-tag-pills" id="quick-tags-container">
+                  <!-- Dynamically populated or default popular items -->
+                  <button type="button" class="tag-pill" data-name="Trứng gà">+ Trứng gà</button>
+                  <button type="button" class="tag-pill" data-name="Cà chua">+ Cà chua</button>
+                  <button type="button" class="tag-pill" data-name="Đậu phụ">+ Đậu phụ</button>
+                  <button type="button" class="tag-pill" data-name="Thịt heo băm">+ Thịt băm</button>
+                  <button type="button" class="tag-pill" data-name="Thịt ba chỉ heo">+ Thịt ba chỉ</button>
+                  <button type="button" class="tag-pill" data-name="Rau muống">+ Rau muống</button>
+                  <button type="button" class="tag-pill" data-name="Rau cải">+ Rau cải</button>
+                  <button type="button" class="tag-pill" data-name="Hành lá">+ Hành lá</button>
+                  <button type="button" class="tag-pill" data-name="Tỏi củ">+ Tỏi</button>
+                  <button type="button" class="tag-pill" data-name="Cơm nguội">+ Cơm nguội</button>
+                  <button type="button" class="tag-pill" data-name="Mì gói">+ Mì gói</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 3: Advanced Preferences Collapsible -->
+            <div class="filter-advanced-row">
+              <div class="filter-field">
+                <label for="select-category"><i class="bi bi-funnel"></i> Loại món:</label>
+                <select id="select-category" class="custom-select">
+                  <option value="all">Tất cả loại món</option>
+                  <option value="Món mặn">Món mặn / Món chính</option>
+                  <option value="Món canh">Món canh</option>
+                  <option value="Món xào/rau">Món xào / Rau xanh</option>
+                  <option value="Món một đĩa">Món một đĩa / Cơm rang / Mì</option>
+                </select>
+              </div>
+
+              <div class="filter-field">
+                <label for="select-cook-time"><i class="bi bi-clock-history"></i> Thời gian nấu:</label>
+                <select id="select-cook-time" class="custom-select">
+                  <option value="0">Tất cả thời gian</option>
+                  <option value="15">Nhanh gọn (Dưới 15 phút)</option>
+                  <option value="25">Trung bình (Dưới 25 phút)</option>
+                  <option value="40">Thư thả (Dưới 40 phút)</option>
+                </select>
+              </div>
+
+              <div class="filter-field">
+                <label for="select-sort"><i class="bi bi-sort-down"></i> Sắp xếp theo:</label>
+                <select id="select-sort" class="custom-select">
+                  <option value="match">Tận dụng đồ có sẵn nhiều nhất (% Match)</option>
+                  <option value="cheapest_missing">Cần mua thêm ít tiền nhất</option>
+                  <option value="cheapest_total">Giá món rẻ nhất</option>
+                  <option value="fastest">Nấu nhanh nhất</option>
+                </select>
+              </div>
+
+              <div class="filter-field checkbox-field">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="check-strict-budget">
+                  <span class="checkmark"></span>
+                  <span class="checkbox-text">Chỉ xem món trong ngân sách</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Action -->
+            <div class="form-submit-row">
+              <button type="submit" class="btn-submit" id="btn-filter-submit">
+                <i class="bi bi-search-heart"></i>
+                <span>Tìm Kiếm Món Ăn Phù Hợp</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results-container">
+      <div class="container">
+        <!-- Results Header / Filter Bar -->
+        <div class="results-meta-bar">
+          <div class="meta-left">
+            <h3 class="results-heading">
+              Gợi ý thực đơn hôm nay
+              <span class="badge-count" id="results-count">0 món</span>
+            </h3>
+            <p class="results-subtext" id="results-explanation">
+              Đang phân tích các món theo ngân sách và nguyên liệu của bạn...
+            </p>
+          </div>
+
+          <div class="meta-right">
+            <div class="view-switch-tabs">
+              <button class="switch-btn active" id="view-mode-cards" title="Xem dạng thẻ">
+                <i class="bi bi-grid-fill"></i> Thẻ món lẻ
+              </button>
+              <button class="switch-btn" id="view-mode-combos" title="Xem mâm cơm kết hợp">
+                <i class="bi bi-layout-text-window-reverse"></i> Mâm cơm combo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recipe Cards Grid -->
+        <div class="dishes-grid" id="dishes-grid">
+          <!-- Dynamically populated dish cards -->
+        </div>
+
+        <!-- Empty state placeholder -->
+        <div class="empty-state hidden" id="empty-state">
+          <div class="empty-icon"><i class="bi bi-search"></i></div>
+          <h4>Không tìm thấy món nào hoàn toàn khớp</h4>
+          <p>Thử tăng nhẹ ngân sách, chọn thêm nguyên liệu sẵn có hoặc nới lỏng bộ lọc thời gian xem sao bạn nhé!</p>
+          <button class="btn-secondary" id="btn-reset-filters">
+            <i class="bi bi-arrow-counterclockwise"></i> Khôi phục bộ lọc chuẩn
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combos Tray Section -->
+    <section class="combos-section hidden" id="combos-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="bi bi-stars"></i> Thực đơn mâm cơm gia đình</span>
+          <h3>Gợi ý Combo Mâm Cơm Khớp Ngân Sách</h3>
+          <p>Hệ thống tự ghép Món Mặn + Món Canh + Rau Xào sao cho tổng chi phí tối ưu nhất và tận dụng chung các nguyên liệu.</p>
+        </div>
+        <div class="combos-grid" id="combos-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 7-Day Weekly Meal Planner Section -->
+    <section class="weekly-section hidden" id="weekly-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="bi bi-calendar-check-fill"></i> Kế hoạch ẩm thực 7 ngày</span>
+          <h3>Thực Đơn Cả Tuần & Tối Ưu Chi Phí Đi Chợ</h3>
+          <p>Lên thực đơn 7 ngày trọn gói theo ngân sách. Tự động tính toán chia sẻ nguyên liệu thừa để không bao giờ bị lãng phí thực phẩm.</p>
+        </div>
+
+        <!-- Weekly Controls Card -->
+        <div class="weekly-controls-card card-glass">
+          <div class="weekly-controls-grid">
+            <div class="w-control-item">
+              <label><i class="bi bi-wallet2 text-accent"></i> Ngân sách cả tuần:</label>
+              <select id="weekly-budget-select" class="custom-select">
+                <option value="350000">350.000 đ (~50k/ngày - Sinh viên)</option>
+                <option value="500000" selected>500.000 đ (~70k/ngày - Tiêu chuẩn 2 người)</option>
+                <option value="700000">700.000 đ (~100k/ngày - Đủ đầy dinh dưỡng)</option>
+                <option value="1000000">1.000.000 đ (~140k/ngày - Thịnh soạn gia đình)</option>
+              </select>
+            </div>
+
+            <div class="w-control-item">
+              <label><i class="bi bi-heart-pulse text-accent"></i> Chế độ dinh dưỡng:</label>
+              <select id="weekly-goal-select" class="custom-select">
+                <option value="balanced" selected>Cân bằng gia đình (Mặn + Canh chuẩn vị)</option>
+                <option value="gym">Tăng cơ / Giàu đạm (High Protein)</option>
+                <option value="clean">Eat Clean / Thanh nhiệt giải độc</option>
+                <option value="saving">Tối ưu tiết kiệm chi phí cao nhất</option>
+              </select>
+            </div>
+
+            <div class="w-control-item btn-action-col">
+              <button type="button" class="btn-submit" id="btn-generate-weekly">
+                <i class="bi bi-magic"></i> Tạo Lại Thực Đơn Mới
+              </button>
+            </div>
+          </div>
+
+          <!-- Weekly Overview Stats -->
+          <div class="weekly-stats-bar" id="weekly-stats-bar">
+            <div class="w-stat-card">
+              <small>Ngân sách tuần:</small>
+              <strong id="w-budget-val">500.000 đ</strong>
+            </div>
+            <div class="w-stat-card">
+              <small>Tổng chi dự kiến:</small>
+              <strong class="text-success" id="w-spent-val">420.000 đ</strong>
+            </div>
+            <div class="w-stat-card">
+              <small>Tiết kiệm được:</small>
+              <strong class="text-accent" id="w-savings-val">80.000 đ</strong>
+            </div>
+            <div class="w-stat-card">
+              <small>Số bữa ăn tối ưu:</small>
+              <strong>14 bữa (7 trưa + 7 tối)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Days Grid -->
+        <div class="weekly-days-grid" id="weekly-days-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Consolidated Weekly Shopping List -->
+        <div class="weekly-shopping-card card-glass" id="weekly-shopping-card">
+          <div class="tips-header" style="justify-content: space-between; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="tips-icon"><i class="bi bi-cart-check-fill text-accent"></i></div>
+              <h4>📋 Danh Sách Đi Chợ 1 Lần Cho Cả Tuần (Tối Ưu 25% Chi Phí)</h4>
+            </div>
+            <button class="btn-copy-shopping" id="btn-copy-weekly-checklist" style="width: auto; padding: 8px 18px;">
+              <i class="bi bi-clipboard-check"></i> Sao chép danh sách tuần
+            </button>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+            Hệ thống đã tự động gộp các nguyên liệu dùng chung (như mua 1 bó hành, 1 khay thịt heo dùng cho 2-3 bữa) để bạn đi chợ 1 lần duy nhất vào đầu tuần.
+          </p>
+          <div class="weekly-shopping-grid" id="weekly-shopping-grid">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shopping Places & Guide Section -->
+    <section class="stores-section hidden" id="stores-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag"><i class="bi bi-geo-alt-fill"></i> Hướng dẫn đi chợ & Nơi mua</span>
+          <h3>Gợi ý Nơi Mua Nguyên Liệu Rẻ & Tươi Ngon</h3>
+          <p>So sánh điểm nổi bật giữa chợ dân sinh và các chuỗi siêu thị tiện lợi tại Việt Nam để bạn đi chợ vừa túi tiền nhất.</p>
+        </div>
+
+        <div class="stores-grid" id="stores-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Smart shopping tips card -->
+        <div class="shopping-tips-card card-glass">
+          <div class="tips-header">
+            <div class="tips-icon"><i class="bi bi-lightbulb-fill"></i></div>
+            <h4>💡 5 Mẹo Vàng Đi Chợ Tiết Kiệm Dành Cho Bạn</h4>
+          </div>
+          <div class="tips-grid">
+            <div class="tip-item">
+              <span class="tip-num">01</span>
+              <div>
+                <h5>Tận dụng gia vị và nước mắm có sẵn</h5>
+                <p>Gia vị chiếm khoảng 10-15% giá thành một bữa ăn. Hãy kiểm tra kệ gia vị trước khi mua thừa nước tương hay dầu hào.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span class="tip-num">02</span>
+              <div>
+                <h5>Đi chợ sáng sớm hoặc săn sale tối</h5>
+                <p>Chợ truyền thống có đồ tươi ngon nhất từ 6h-8h sáng. Với siêu thị Bách Hóa Xanh, từ 19h tối thường có chương trình giảm 30-50% rau củ.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span class="tip-num">03</span>
+              <div>
+                <h5>Mua lẻ theo lạng ở chợ dân sinh</h5>
+                <p>Nếu bạn nấu cho 1-2 người, mua 1-2 lạng thịt ở chợ sẽ rẻ hơn mua khay đóng sẵn nửa ký ở siêu thị lớn.</p>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span class="tip-num">04</span>
+              <div>
+                <h5>Ăn rau củ theo đúng mùa vụ</h5>
+                <p>Rau củ đúng mùa (như bắp cải mùa đông, rau muống mùa hè) không chỉ ngọt ngon tự nhiên mà còn rẻ bằng một nửa so với trái mùa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Dish Detail Modal -->
+  <div class="modal-overlay hidden" id="dish-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modal-close-btn" title="Đóng">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="modal-body" id="modal-dish-content">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Dish Modal -->
+  <div class="modal-overlay hidden" id="add-dish-modal">
+    <div class="modal-card modal-card-sm">
+      <button class="modal-close-btn" id="add-modal-close-btn" title="Đóng">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="modal-header">
+        <h3><i class="bi bi-plus-circle-fill text-accent"></i> Đóng Góp Món Ăn Mới</h3>
+        <p>Lưu lại công thức gia truyền hoặc món ăn tiết kiệm quen thuộc của bạn.</p>
+      </div>
+
+      <form id="add-dish-form" class="add-dish-form">
+        <div class="form-group">
+          <label for="new-dish-name">Tên món ăn (*):</label>
+          <input type="text" id="new-dish-name" placeholder="Ví dụ: Thịt rang cháy cạnh, Trứng xào cà chua..." required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="new-dish-category">Phân loại:</label>
+            <select id="new-dish-category">
+              <option value="Món mặn">Món mặn</option>
+              <option value="Món canh">Món canh</option>
+              <option value="Món xào/rau">Món xào / Rau</option>
+              <option value="Món một đĩa">Món một đĩa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-dish-price">Chi phí ước tính (VNĐ):</label>
+            <input type="number" id="new-dish-price" value="35000" step="1000" min="5000" required>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="new-dish-time">Thời gian nấu (phút):</label>
+            <input type="number" id="new-dish-time" value="20" min="5">
+          </div>
+          <div class="form-group">
+            <label for="new-dish-difficulty">Độ khó:</label>
+            <select id="new-dish-difficulty">
+              <option value="Dễ">Dễ</option>
+              <option value="Trung bình">Trung bình</option>
+              <option value="Khó">Khó</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="new-dish-desc">Mô tả ngắn món ăn:</label>
+          <textarea id="new-dish-desc" rows="2" placeholder="Hương vị thơm ngon, giòn ngọt hấp dẫn..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="new-dish-ingredients">Nguyên liệu chính (cách nhau bởi dấu phẩy):</label>
+          <input type="text" id="new-dish-ingredients" placeholder="Thịt ba chỉ 200g, Hành lá, Nước mắm..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="new-dish-steps">Các bước nấu (mỗi bước một dòng):</label>
+          <textarea id="new-dish-steps" rows="3" placeholder="Bước 1: Rửa thịt thái miếng vừa ăn&#10;Bước 2: Rang cháy cạnh vàng thơm&#10;Bước 3: Nêm mắm đường hành hoa" required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-save-new-dish">
+          <i class="bi bi-check2-circle"></i> Lưu Món Ăn Vào Hệ Thống
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fridge Image AI Scanner Modal -->
+  <div class="modal-overlay hidden" id="fridge-scan-modal">
+    <div class="modal-card modal-card-sm">
+      <button class="modal-close-btn" id="scan-modal-close-btn" title="Đóng">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="modal-header">
+        <h3><i class="bi bi-camera-fill text-accent"></i> AI Quét Ảnh Tủ Lạnh</h3>
+        <p>Tải ảnh hoặc chọn mẫu ảnh tủ lạnh để AI tự động trích xuất nguyên liệu.</p>
+      </div>
+
+      <div class="scan-upload-area" id="scan-dropzone">
+        <i class="bi bi-cloud-arrow-up-fill" style="font-size: 2.4rem; color: var(--color-primary);"></i>
+        <h5>Kéo thả ảnh hoặc bấm để chọn ảnh tủ lạnh</h5>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Hỗ trợ JPG, PNG (Tối đa 5MB)</p>
+        <input type="file" id="fridge-file-input" accept="image/*" style="display: none;">
+        <button type="button" class="btn-secondary" id="btn-browse-file" style="margin-top: 10px;">
+          <i class="bi bi-image"></i> Chọn ảnh từ thiết bị
+        </button>
+      </div>
+
+      <div class="scan-presets-section" style="margin-top: 20px;">
+        <label style="font-size: 0.84rem; font-weight: 700; display: block; margin-bottom: 8px;">
+          💡 Hoặc thử nhanh với ảnh mẫu thực tế:
+        </label>
+        <div class="sample-fridge-chips">
+          <button type="button" class="sample-chip" data-items="Trứng gà,Cà chua,Hành lá,Đậu phụ">
+            <span>🥚 Tủ 1: Trứng, Cà chua, Đậu phụ, Hành</span>
+          </button>
+          <button type="button" class="sample-chip" data-items="Thịt heo băm,Rau cải,Cà chua,Tỏi củ">
+            <span>🥩 Tủ 2: Thịt băm, Rau cải, Cà chua, Tỏi</span>
+          </button>
+          <button type="button" class="sample-chip" data-items="Cá ba sa,Rau muống,Ớt tươi,Hành lá">
+            <span>🐟 Tủ 3: Cá basa, Rau muống, Ớt, Hành</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="scan-result-preview hidden" id="scan-result-preview" style="margin-top: 20px;">
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 14px;">
+          <h6 style="color: var(--color-success); font-weight: 800; margin-bottom: 6px;">
+            <i class="bi bi-check2-circle"></i> AI Đã Nhận Diện Thành Công:
+          </h6>
+          <div id="scan-detected-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;"></div>
+          <button type="button" class="btn-submit" id="btn-apply-scanned-tags" style="padding: 10px;">
+            <i class="bi bi-plus-circle"></i> Đưa vào bộ lọc nguyên liệu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating AI Chef Button & Chat Drawer -->
+  <div class="ai-chef-floating-btn" id="ai-chef-btn" title="Trò chuyện với Bếp Trưởng AI">
+    <div class="chef-avatar">👨‍🍳</div>
+    <span class="chef-badge-pulse"></span>
+    <span class="chef-btn-label">Hỏi Bếp Trưởng AI</span>
+  </div>
+
+  <!-- AI Chef Chat Drawer -->
+  <div class="ai-chef-drawer hidden" id="ai-chef-drawer">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="chef-avatar-sm">👨‍🍳</div>
+        <div>
+          <h5 style="margin: 0; font-weight: 800; font-size: 0.95rem;">Bếp Trưởng AI</h5>
+          <small style="color: var(--color-success); font-size: 0.75rem;"><i class="bi bi-circle-fill" style="font-size: 6px;"></i> Trực tuyến sẵn sàng trợ giúp</small>
+        </div>
+      </div>
+      <button class="btn-icon" id="btn-close-chef" style="width: 32px; height: 32px;" title="Đóng">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="chef-messages-body" id="chef-messages">
+      <div class="chef-msg incoming">
+        <p>Xin chào bạn! Mình là Bếp Trưởng AI 👨‍🍳. Bạn đang có nguyên liệu nào chưa biết nấu, muốn tìm món siêu tốc hay cần mẹo chế biến nào cứ hỏi mình nhé!</p>
+      </div>
+    </div>
+
+    <!-- Quick questions chips -->
+    <div class="chef-quick-prompts">
+      <button type="button" class="quick-prompt" data-q="Tủ lạnh còn trứng và cà chua nấu món gì ngon?">Trứng + Cà chua nấu gì?</button>
+      <button type="button" class="quick-prompt" data-q="Gợi ý món ăn siêu tốc dưới 15 phút?">Món siêu tốc &lt; 15p?</button>
+      <button type="button" class="quick-prompt" data-q="Cho mình mẹo khử mùi tanh của cá?">Mẹo khử tanh cá?</button>
+      <button type="button" class="quick-prompt" data-q="Bữa ăn sinh viên 30k cho 2 người?">Bữa 30k sinh viên?</button>
+    </div>
+
+    <form class="chef-input-form" id="chef-chat-form">
+      <input type="text" id="chef-chat-input" placeholder="Hỏi đầu bếp bất kỳ điều gì..." autocomplete="off">
+      <button type="submit" class="btn-chef-send" id="btn-chef-send">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </form>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification hidden" id="toast-msg">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toast-text">Đã sao chép danh sách đi chợ!</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <strong>🍜 Bếp Thông Minh</strong> — Hệ thống gợi ý món ăn theo ngân sách và nguyên liệu thực tế.
+      </div>
+      <div class="footer-right">
+        Xây dựng với chuẩn Web hiện đại • Đầy đủ RESTful API Backend & Frontend tương tác cao.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/fallback-data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
