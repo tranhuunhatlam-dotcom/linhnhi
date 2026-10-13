@@ -1,0 +1,77 @@
+[
+  {
+    "id": "bach_hoa_xanh",
+    "name": "Bách Hóa Xanh",
+    "type": "Cửa hàng thực phẩm tiện lợi",
+    "badge": "Tiện lợi & Giá tốt",
+    "icon": "bi bi-shop",
+    "avgPriceLevel": "$$",
+    "description": "Rau củ thịt cá tươi sống đóng khay định lượng nhỏ (100g - 300g), rất phù hợp với sinh viên và người sống độc thân hoặc gia đình 2 người.",
+    "advantages": [
+      "Có khay thịt cá định lượng nhỏ từ 15k - 30k",
+      "Rau củ sơ chế sẵn sạch sẽ, đóng gói tiện dụng",
+      "Thường có chương trình giảm giá xả hàng rau củ sau 19h tối"
+    ],
+    "link": "https://www.bachhoaxanh.com"
+  },
+  {
+    "id": "cho_truyen_thong",
+    "name": "Chợ Truyền Thống / Dân Sinh",
+    "type": "Chợ dân sinh địa phương",
+    "badge": "Rẻ nhất & Linh hoạt",
+    "icon": "bi bi-basket2-fill",
+    "avgPriceLevel": "$",
+    "description": "Nơi có giá thành tốt nhất và linh hoạt nhất: Bạn có thể mua 2.000đ hành lá, 10.000đ thịt băm, 1 quả cà chua mà không bị ràng buộc định lượng.",
+    "advantages": [
+      "Tiết kiệm chi phí từ 20% - 35% so với siêu thị",
+      "Mua đúng định lượng bạn cần, không lãng phí nguyên liệu dư",
+      "Rau củ và cá đồng tươi mới mỗi sáng sớm"
+    ],
+    "tips": "Nên đi chợ từ 6h - 8h sáng để chọn mớ rau tươi ngon nhất, hoặc sau 11h trưa để mua giá rẻ hơn."
+  },
+  {
+    "id": "winmart",
+    "name": "WinMart+ / WinMart",
+    "type": "Siêu thị mini",
+    "badge": "Chuẩn sạch MEATDeli",
+    "icon": "bi bi-cart4",
+    "avgPriceLevel": "$$$",
+    "description": "Mạng lưới cửa hàng phủ khắp các khu phố và chung cư, nổi tiếng với thịt heo mát MEATDeli tươi sạch chuẩn châu Âu.",
+    "advantages": [
+      "Thịt sạch nguồn gốc rõ ràng, không chất bảo quản",
+      "Nhiều gia vị đóng gói nhỏ và thực phẩm sơ chế",
+      "Thẻ hội viên WiN giảm ngay 20% cho thịt và rau"
+    ],
+    "link": "https://winmart.vn"
+  },
+  {
+    "id": "coop_food",
+    "name": "Co.op Food",
+    "type": "Siêu thị thực phẩm an toàn",
+    "badge": "Bình ổn giá & Chuẩn VietGAP",
+    "icon": "bi bi-bag-check-fill",
+    "avgPriceLevel": "$$",
+    "description": "Thương hiệu uy tín với nguồn thực phẩm chuẩn VietGAP, giá cả bình ổn và nhiều chương trình tích điểm.",
+    "advantages": [
+      "Hàng hóa kiểm định chất lượng nghiêm ngặt",
+      "Nhiều món canh và combo nấu sẵn tiện dụng",
+      "Giá cả niêm yết minh bạch, nhiều khuyến mãi tuần"
+    ],
+    "link": "https://cooponline.vn"
+  },
+  {
+    "id": "delivery_apps",
+    "name": "GrabMart / ShopeeFood / BeFood",
+    "type": "Dịch vụ giao hàng tận nhà",
+    "badge": "Giao nhanh 30 phút",
+    "icon": "bi bi-bicycle",
+    "avgPriceLevel": "$$$",
+    "description": "Giải pháp hoàn hảo những ngày bận rộn hoặc thời tiết mưa gió: Shipper đi chợ hộ và mang nguyên liệu tới tận cửa trong 30-45 phút.",
+    "advantages": [
+      "Không cần ra ngoài, tiết kiệm thời gian",
+      "Nhiều voucher giảm giá 20k - 50k và mã miễn phí vận chuyển",
+      "Dễ so sánh giá giữa nhiều cửa hàng lân cận"
+    ],
+    "link": "https://shopeefood.vn"
+  }
+]
